@@ -22,6 +22,9 @@ canvas.addEventListener('mousedown', (event) => {
   startY = event.offsetY;
 });
 canvas.addEventListener('mouseup', (move) => {
+  if (!pan) {
+    return;
+  }
   pan = false;
   setX = setX + move.offsetX - startX;
   setY = setY + move.offsetY - startY;
