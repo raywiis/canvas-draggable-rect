@@ -16,6 +16,7 @@ let pan = false;
 let startX, startY;
 let setX = 0,
   setY = 0;
+let scale = 1;
 canvas.addEventListener('mousedown', (event) => {
   pan = true;
   startX = event.offsetX;
@@ -44,6 +45,19 @@ canvas.addEventListener('mousemove', (move) => {
   }
   ctx.resetTransform();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(scale, scale);
+
   ctx.translate(setX + (move.offsetX - startX), setY + (move.offsetY - startY));
+  ctx.strokeRect(0, 0, 100, 100);
+});
+
+canvas.addEventListener('wheel', (event) => {
+  console.log(event.deltaY);
+  scale += event.deltaY * 0.001;
+
+  ctx.resetTransform();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.scale(scale, scale);
+  ctx.translate(setX, setY);
   ctx.strokeRect(0, 0, 100, 100);
 });
