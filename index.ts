@@ -35,8 +35,8 @@ canvas.addEventListener('mouseleave', (move) => {
     return;
   }
   pan = false;
-  setX = setX + move.offsetX - startX;
-  setY = setY + move.offsetY - startY;
+  setX = setX + (move.offsetX - startX) * (1 / scale);
+  setY = setY + (move.offsetY - startY) * (1 / scale);
 });
 
 canvas.addEventListener('mousemove', (move) => {
@@ -47,7 +47,10 @@ canvas.addEventListener('mousemove', (move) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.scale(scale, scale);
 
-  ctx.translate(setX + (move.offsetX - startX), setY + (move.offsetY - startY));
+  ctx.translate(
+    setX + (move.offsetX - startX) * (1 / scale),
+    setY + (move.offsetY - startY) * (1 / scale)
+  );
   ctx.strokeRect(0, 0, 100, 100);
 });
 
