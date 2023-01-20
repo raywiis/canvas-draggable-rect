@@ -24,8 +24,7 @@ canvas.addEventListener('mousedown', (event) => {
 const draw = () => {
   ctx.resetTransform();
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.scale(scale, scale);
-  ctx.translate(setX, setY);
+  ctx.transform(scale, 0, 0, scale, setX, setY);
   ctx.strokeRect(100, 100, 200, 200);
   ctx.strokeRect(0, 0, 400, 400);
 };
@@ -45,8 +44,8 @@ canvas.addEventListener('mouseleave', (move) => {
     return;
   }
   pan = false;
-  setX = setX + (move.offsetX - startX) * (1 / scale);
-  setY = setY + (move.offsetY - startY) * (1 / scale);
+  setX = setX + (move.offsetX - startX);
+  setY = setY + (move.offsetY - startY);
 });
 
 canvas.addEventListener('mousemove', (move) => {
@@ -54,8 +53,8 @@ canvas.addEventListener('mousemove', (move) => {
     return;
   }
 
-  setX += (move.offsetX - startX) * (1 / scale);
-  setY += (move.offsetY - startY) * (1 / scale);
+  setX += move.offsetX - startX;
+  setY += move.offsetY - startY;
   startX = move.offsetX;
   startY = move.offsetY;
   draw();
@@ -64,24 +63,15 @@ canvas.addEventListener('mousemove', (move) => {
 canvas.addEventListener('wheel', (event) => {
   const delta = event.deltaY * 0.001;
 
-  const prescale = scale;
-  const prescaleX = event.offsetX;
-  const prescaleY = event.offsetY;
+  const s = (scale - delta) / scale;
+  const cx = event.clientX;
+  const cy = event.clientY;
+  const lx = -setX;
+  const ly = -setY;
+  setX = -((cx + lx) * s - cx);
+  setY = -((cy + ly) * s - cy);
 
   scale -= delta;
 
-  const scaleCoff = scale / prescale;
-  const scaleX = prescaleX * scaleCoff;
-  const scaleY = prescaleY * scaleCoff;
-  const dx = prescaleX - scaleX;
-  const dy = prescaleY - scaleY;
-
-  // setX /= scaleCoff;
-  setX += dx;
-
-  console.log({ prescaleX, prescaleY, dx });
-
-  // console.log(x);
-  // setY += dy;
   draw();
 });
